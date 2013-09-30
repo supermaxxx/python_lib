@@ -5,6 +5,46 @@ import MySQLdb
 import os
 import sys
 import urllib
+import smtplib
+from email.MIMEText import MIMEText
+from email.MIMEMultipart import MIMEMultipart
+
+#Email class
+class sendmail(object):
+    def __init__(self):
+        self.MAIL_HOST = 'smtp.??.com'    # smtp server, eg: smtp.qq.com
+        self.MAIL_USERNAME = '??????@??.com'    # username of your account, eg: 98***90@qq.com
+        self.MAIL_PASSWORD = '??????'    # password of your account
+    def run(self,mail_to,mail_subject,mail_message):
+        emsg = MIMEMultipart()
+        body = MIMEText(mail_message)  # mail_message
+        emsg.attach(body)
+        emsg['To'] = mail_to    # Where to send the mail, eg: 30***04@qq.com
+        emsg['from'] = self.MAIL_USERNAME
+        emsg['subject'] = mail_subject    # title of the mail
+        try:
+            session = smtplib.SMTP()
+            session.connect(self.MAIL_HOST)
+            session.login(self.MAIL_USERNAME,self.MAIL_PASSWORD)
+            session.sendmail(self.MAIL_USERNAME,mail_to,emsg.as_string())
+            session.close()
+            print 'Success.'
+        except Exception,e:
+            print e
+    def help():
+        print "Usage: sendmail().run('30*****04@qq.com','Title','Message')"
+
+
+#SMS class
+class sendsms(object):
+    def __init__(self):
+        pass
+    def run(self, phone, msg_text):
+        data = urllib.urlencode({'msg':msg_text})
+        cmd = 'curl '+ '"http://sms.sdo.com:9090/submit.asp?CPID=SDCYSF&PWD=P2N5G9X7&PID=500107&phone='+phone+'
+&msg='+data+'"'
+        os.system(cmd)
+        
 
 class config(object):
    def __init__(self,conf):
@@ -21,6 +61,7 @@ class config(object):
        else:
            return self.value
 
+
 #The logger class
 class mylogger(object):
    def __init__(self,filename):
@@ -29,6 +70,7 @@ class mylogger(object):
        logging.basicConfig(filename=self.filename,level = logging.DEBUG, format = '%(asctime)s - %(levelname)s: %(message)s')
        logger = logging.getLogger()
        return logger
+
 
 #The mysql class
 class mysql(object):
@@ -90,14 +132,6 @@ class mysql(object):
         self.conn.close()
         return True,rows
 
-#SMS class
-class sendsms(object):
-    def __init__(self):
-        pass
-    def run(self, phone, msg_text):
-        data = urllib.urlencode({'msg':msg_text})
-        cmd = 'curl '+ '"http://sms.sdo.com:9090/submit.asp?CPID=SDCYSF&PWD=P2N5G9X6&PID=500106&phone='+phone+'&msg='+data+'"'
-        os.system(cmd)
          
 #Write Log file class
 class writelogfile(object):
@@ -109,5 +143,8 @@ class writelogfile(object):
         fd.write(logmsg)
         fd.close()
 
+
 if __name__ == '__main__':
-   sendsms().run('137?????677','This is a test')
+    pass
+    #sendsms().run('137*****677','This is a test')
+    #sendmail().run('30*****04@qq.com','Title','Message')
