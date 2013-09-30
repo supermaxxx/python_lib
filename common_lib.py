@@ -41,8 +41,7 @@ class sendsms(object):
         pass
     def run(self, phone, msg_text):
         data = urllib.urlencode({'msg':msg_text})
-        cmd = 'curl '+ '"http://sms.sdo.com:9090/submit.asp?CPID=SDCYSF&PWD=P2N5G9X7&PID=500107&phone='+phone+'
-&msg='+data+'"'
+        cmd = 'curl '+ '"http://sms.sdo.com:9090/submit.asp?CPID=SDCYSF&PWD=P2N5G9X7&PID=500107&phone='+phone+'&msg='+data+'"'
         os.system(cmd)
         
 
