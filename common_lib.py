@@ -94,7 +94,11 @@ class mysql(object):
 
     def run(self,cmd):
         try:
-            self.getconn()
+            if self.db == '':
+                self.getconn()
+                self.change_db()
+            else:
+                self.getconn()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit (1)
