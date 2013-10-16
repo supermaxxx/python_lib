@@ -79,6 +79,7 @@ class mysql(object):
         self.user = user
         self.passwd = passwd
         self.db = db
+        self.odb = odb
 
     def getconn(self):
         self.conn = MySQLdb.connect(host = "localhost",
@@ -87,8 +88,8 @@ class mysql(object):
                            db = self.db)
         return self.conn
 
-    def change_db(self,db):
-        self.conn.select_db(db)
+    def change_db(self):
+        self.conn.select_db(self.odb)
         return self.conn
 
     def run(self,cmd):
@@ -113,7 +114,11 @@ class mysql(object):
 
     def get_response(self,cmd):
         try:
-            self.getconn()
+            if self.db == '':
+                self.getconn()
+                self.change_db(self.odb)
+            else:
+                self.getconn()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit (1)
