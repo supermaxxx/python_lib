@@ -73,13 +73,13 @@ class mylogger(object):
 
 #The mysql class
 class mysql(object):
-    def __init__(self,user,passwd,db):
+    def __init__(self,user,passwd,db,cdb):
         self.conn = None
         self.cursor = None
         self.user = user
         self.passwd = passwd
         self.db = db
-        self.odb = odb
+        self.cdb = cdb
 
     def getconn(self):
         self.conn = MySQLdb.connect(host = "localhost",
@@ -89,7 +89,7 @@ class mysql(object):
         return self.conn
 
     def change_db(self):
-        self.conn.select_db(self.odb)
+        self.conn.select_db(self.cdb)
         return self.conn
 
     def run(self,cmd):
@@ -116,7 +116,7 @@ class mysql(object):
         try:
             if self.db == '':
                 self.getconn()
-                self.change_db(self.odb)
+                self.change_db()
             else:
                 self.getconn()
         except MySQLdb.Error, e:
