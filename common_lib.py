@@ -86,7 +86,7 @@ class mysql(object):
                            user = self.user,
                            passwd = self.passwd,
                            db = self.db)
-        if self.db = '':
+        if self.db == '':
             self.conn.select_db(self.cdb)
         return self.conn
 
