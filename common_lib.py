@@ -86,19 +86,13 @@ class mysql(object):
                            user = self.user,
                            passwd = self.passwd,
                            db = self.db)
-        return self.conn
-
-    def change_db(self):
-        self.conn.select_db(self.cdb)
+        if self.db = '':
+            self.conn.select_db(self.cdb)
         return self.conn
 
     def run(self,cmd):
         try:
-            if self.db == '':
-                self.getconn()
-                self.change_db()
-            else:
-                self.getconn()
+            self.getconn()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit (1)
@@ -118,11 +112,7 @@ class mysql(object):
 
     def get_response(self,cmd):
         try:
-            if self.db == '':
-                self.getconn()
-                self.change_db()
-            else:
-                self.getconn()
+            self.getconn()
         except MySQLdb.Error, e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit (1)
