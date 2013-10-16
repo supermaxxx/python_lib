@@ -87,6 +87,10 @@ class mysql(object):
                            db = self.db)
         return self.conn
 
+    def change_db(self,db):
+        self.conn.select_db(db)
+        return self.conn
+
     def run(self,cmd):
         try:
             self.getconn()
