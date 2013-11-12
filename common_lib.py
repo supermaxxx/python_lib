@@ -5,9 +5,57 @@ import MySQLdb
 import os
 import sys
 import urllib
+#for email
 import smtplib
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart
+#for html
+from HTMLParser import HTMLParser
+#for getIpInfo
+import re
+import json
+import socket
+
+
+#get IP infomation class
+class getIpInfo(object):
+    def __init__(self):
+        self.url = "http://ip.taobao.com/service/getIpInfo.php?ip="
+        self.re_ipaddress = re.compile(r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+        self.re_domain = re.compile(r'[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?')
+
+    def ip_location(self,ip):
+        data = urllib.urlopen(self.url + ip).read()
+        datadict=json.loads(data)
+        for oneinfo in datadict:
+            if "code" == oneinfo:
+                if datadict[oneinfo] == 0:
+                    return datadict["data"]["country"] + datadict["data"]["region"] + datadict["data"]["city"] + datadict["data"]["isp"]
+
+    def getIpInfo(self,input):
+        if self.re_ipaddress.match(input):
+            city_address = self.ip_location(input)
+        elif (self.re_domain.match(input)):
+            result = socket.getaddrinfo(input.strip(), None)
+            ipaddr = result[0][4][0]
+            city_address = self.ip_location(ipaddr)
+        return city_address
+
+		
+#html strip tags 
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+    def strip_tags(self,html):
+        s = MLStripper()
+        s.feed(html)
+        return s.get_data()
+
 
 #Email class
 class sendmail(object):
