@@ -1,4 +1,2 @@
-my lib for python
+mylib for python
 ==========
-
-common_lib of python
