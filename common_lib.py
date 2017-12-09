@@ -65,11 +65,13 @@ class sendmail(object):
         self.MAIL_PASSWORD = '??????'    # password of your account
     def run(self,mail_to,mail_subject,mail_message):
         emsg = MIMEMultipart()
-        body = MIMEText(mail_message)  # mail_message
+        body = MIMEText(mail_message,'plain','utf-8')  # mail_message
         emsg.attach(body)
         emsg['To'] = mail_to    # Where to send the mail, eg: 30***04@qq.com
         emsg['from'] = self.MAIL_USERNAME
         emsg['subject'] = mail_subject    # title of the mail
+        emsg["Accept-Language"]="zh-CN"
+        emsg["Accept-Charset"]="ISO-8859-1,utf-8"
         try:
             session = smtplib.SMTP()
             session.connect(self.MAIL_HOST)
